@@ -1,0 +1,389 @@
+@import 'tailwindcss';
+
+/* ─── Tokens ─────────────────────────────────────────────────────────────
+   Supplied palette: porcelain F0E1D8 · blush EBCFC3 · stone B9B2A9 · clay B57466.
+   clay-deep / muted / ink are tonal extensions so small text meets WCAG AA:
+   clay (2.9:1 on porcelain) is reserved for lines, numerals and large display accents. */
+@theme {
+  --color-porcelain: #f0e1d8;
+  --color-blush: #ebcfc3;
+  --color-stone: #b9b2a9;
+  --color-clay: #b57466;
+  --color-clay-deep: #84493d;
+  --color-ink: #2a2421;
+  --color-muted: #5e5650;
+
+  --font-display: var(--font-cormorant), 'Cormorant Garamond', Georgia, serif;
+  --font-sans: var(--font-jost), 'Jost', system-ui, sans-serif;
+
+  --ease-soft: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-silk: cubic-bezier(0.77, 0, 0.18, 1);
+}
+
+@layer base {
+  html {
+    background: var(--color-porcelain);
+    color: var(--color-ink);
+    scroll-padding-top: 6rem;
+    -webkit-tap-highlight-color: transparent;
+  }
+  html:has(dialog[open]) { overflow: hidden; }
+  body {
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    font-variant-numeric: lining-nums;
+    background: var(--color-porcelain);
+    overflow-x: clip;
+  }
+  h1, h2, h3 { font-family: var(--font-display); font-weight: 400; text-wrap: balance; }
+  p { text-wrap: pretty; }
+  ::selection { background: var(--color-clay); color: var(--color-porcelain); }
+  :focus-visible { outline: 1px solid var(--color-clay-deep); outline-offset: 5px; }
+  .on-dark :focus-visible { outline-color: var(--color-porcelain); }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+}
+
+/* Soft-paper grain: one fixed, non-blended layer so scrolling stays cheap. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .16 0 0 0 0 .13 0 0 0 0 .12 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ─── Type ──────────────────────────────────────────────────────────── */
+@utility eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  line-height: 1.6;
+}
+@utility display {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(2.6rem, 5.6vw, 5.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.015em;
+}
+@utility serif-lead {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 2.4vw, 2.25rem);
+  line-height: 1.2;
+}
+@utility shell {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 92rem;
+  padding-inline: clamp(1rem, 5vw, 5rem);
+}
+@utility hairline { height: 1px; background: currentColor; opacity: 0.35; }
+
+/* ─── Buttons & links ───────────────────────────────────────────────── */
+.btn {
+  --btn-bg: var(--color-ink);
+  --btn-fg: var(--color-porcelain);
+  --btn-fill: var(--color-clay-deep);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  min-height: 3.5rem;
+  padding: 0 1.9rem;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  border-radius: 1px;
+  transition: color 0.5s var(--ease-soft), scale 0.2s var(--ease-soft);
+  cursor: pointer;
+}
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--btn-fill);
+  border-radius: 50% 50% 0 0 / 30% 30% 0 0;
+  translate: 0 101%;
+  transition: translate 0.7s var(--ease-silk), border-radius 0.7s var(--ease-silk);
+}
+.btn svg { transition: translate 0.5s var(--ease-soft); }
+@media (hover: hover) {
+  .btn:hover::before { translate: 0 0; border-radius: 0; }
+  .btn:hover svg { translate: 3px -3px; }
+}
+.btn:active { scale: 0.98; }
+.btn:disabled, .btn[aria-disabled='true'] { opacity: 0.55; cursor: not-allowed; }
+.btn:disabled::before { display: none; }
+.btn-light { --btn-bg: var(--color-porcelain); --btn-fg: var(--color-ink); --btn-fill: var(--color-blush); }
+.btn-clay { --btn-bg: var(--color-clay-deep); --btn-fg: var(--color-porcelain); --btn-fill: var(--color-ink); }
+.btn-ghost { --btn-bg: transparent; --btn-fg: currentColor; --btn-fill: color-mix(in srgb, currentColor 12%, transparent); box-shadow: inset 0 0 0 1px currentColor; }
+
+.link-line {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding-block: 0.35rem;
+}
+.link-line::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: currentColor;
+  transform-origin: right;
+  transition: transform 0.7s var(--ease-silk);
+}
+.link-line.is-quiet::after { transform: scaleX(0); }
+@media (hover: hover) {
+  .link-line:hover::after { transform: scaleX(0); }
+  .link-line.is-quiet:hover::after, .link-line.is-quiet[aria-current='page']::after { transform: scaleX(1); transform-origin: left; }
+}
+.link-line.is-quiet[aria-current='page']::after { transform: scaleX(1); }
+
+/* ─── Motion system ─────────────────────────────────────────────────────
+   One observer (components/motion-observer.tsx) sets [data-in] once per element.
+   Variants: rise · blur · mask (image curtain) · words (masked word stagger) · line.
+   Stagger with style={{'--d': '120ms'}}. Hidden states only apply with JS + motion allowed. */
+[data-reveal] {
+  transition:
+    opacity 1.2s var(--ease-soft) var(--d, 0s),
+    translate 1.2s var(--ease-soft) var(--d, 0s),
+    filter 1.2s var(--ease-soft) var(--d, 0s),
+    clip-path 1.5s var(--ease-silk) var(--d, 0s),
+    transform 1.2s var(--ease-silk) var(--d, 0s);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal='rise']:not([data-in]) { opacity: 0; translate: 0 2rem; }
+  .js [data-reveal='blur']:not([data-in]) { opacity: 0; filter: blur(14px); translate: 0 0.75rem; }
+  .js [data-reveal='fade']:not([data-in]) { opacity: 0; }
+  .js [data-reveal='line']:not([data-in]) { transform: scaleX(0); }
+  .js [data-reveal='mask']:not([data-in]) { clip-path: inset(100% 0 0 0); }
+  .js [data-reveal='mask-x']:not([data-in]) { clip-path: inset(0 100% 0 0); }
+  .js [data-reveal^='mask'] img { transition: scale 2.2s var(--ease-soft) var(--d, 0s); }
+  .js [data-reveal^='mask']:not([data-in]) img { scale: 1.18; }
+  .js [data-reveal='words']:not([data-in]) .w > span { translate: 0 108%; }
+  .js [data-reveal='words'] .w > span { transition: translate 1.1s var(--ease-soft) calc(var(--d, 0s) + var(--i) * 55ms); }
+  .js [data-reveal='track']:not([data-in]) { opacity: 0; letter-spacing: 0.6em; }
+  [data-reveal='track'] { transition: opacity 1.4s var(--ease-soft) var(--d, 0s), letter-spacing 1.8s var(--ease-soft) var(--d, 0s); }
+}
+[data-reveal='line'] { transform-origin: left; }
+.w { display: inline-block; overflow: clip; vertical-align: top; padding-bottom: 0.12em; margin-bottom: -0.12em; }
+.w > span { display: inline-block; }
+
+/* Scroll-linked parallax: decorative progressive enhancement (no fallback by design). */
+@media (prefers-reduced-motion: no-preference) {
+  @supports ((animation-timeline: view()) and (animation-range: entry)) {
+    @keyframes parallax { from { translate: 0 var(--px, -7%); } to { translate: 0 calc(var(--px, -7%) * -1); } }
+    [data-parallax] { animation: parallax linear both; animation-timeline: view(); }
+    @keyframes drift-x { from { translate: var(--dx, 6%) 0; } to { translate: calc(var(--dx, 6%) * -1) 0; } }
+    [data-drift] { animation: drift-x linear both; animation-timeline: view(); }
+  }
+}
+
+/* Image frames */
+.frame { position: relative; overflow: clip; background: var(--color-blush); }
+.frame > .frame-inner { position: absolute; inset: -8% 0; }
+.frame img { object-fit: cover; }
+.arch { border-radius: 999px 999px 0 0; }
+@media (hover: hover) {
+  .frame-hover img { transition: scale 1.6s var(--ease-soft); }
+  .frame-hover:hover img { scale: 1.05; }
+}
+
+/* ─── Splash ────────────────────────────────────────────────────────── */
+/* Timeline (~3.3s, transform/opacity/filter only):
+   0.0  a single drop of light falls to centre
+   0.6  it lands: two ripples spread outward
+   0.75 wordmark rises out of its mask, blur→sharp; "water" leans in from italic
+   1.25 hairline draws; product line tracks in
+   2.0  contents lift away; porcelain curtain rises on a curved silk edge,
+        a blush under-layer follows 120ms later, revealing the hero. */
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  animation: splash-gone 0s linear 3.4s forwards;
+}
+.splash-layer {
+  position: absolute;
+  inset: 0 0 -14vh;
+  border-radius: 0 0 50% 50% / 0 0 14vh 14vh;
+  animation: splash-curtain 1.05s var(--ease-silk) 2.05s forwards;
+}
+.splash-layer-back { background: var(--color-blush); animation-delay: 2.17s; }
+.splash-layer-front { background: var(--color-porcelain); }
+.splash-stage { position: relative; display: grid; place-items: center; text-align: center; animation: splash-exit 0.7s var(--ease-soft) 1.95s forwards; }
+
+.splash-drop {
+  position: fixed;
+  left: 50%;
+  top: 0;
+  width: 1px;
+  height: 50vh;
+  background: linear-gradient(to bottom, transparent, var(--color-clay));
+  transform: scaleY(0);
+  transform-origin: top;
+  animation: splash-drop 0.95s var(--ease-silk) 0.05s forwards;
+}
+.splash-ripple {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(34rem, 80vw);
+  aspect-ratio: 1;
+  margin: calc(min(34rem, 80vw) / -2) 0 0 calc(min(34rem, 80vw) / -2);
+  border: 1px solid rgb(181 116 102 / 0.45);
+  border-radius: 50%;
+  opacity: 0;
+  animation: splash-ripple 2s var(--ease-soft) calc(0.6s + var(--i) * 0.28s) forwards;
+}
+
+.splash-word {
+  display: flex;
+  overflow: clip;
+  padding: 0.08em 0.18em 0.16em;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(2.8rem, 9vw, 6rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+.splash-word span, .splash-word em { display: inline-block; opacity: 0; animation: splash-char 1.15s var(--ease-soft) calc(0.75s + var(--i) * 42ms) forwards; }
+.splash-word em { animation-name: splash-char-italic; }
+.splash-rule { width: 8rem; height: 1px; margin: 1.1rem auto 0; background: var(--color-clay); transform: scaleX(0); transform-origin: left; animation: splash-rule 1.1s var(--ease-silk) 1.25s forwards; }
+.splash-sub { opacity: 0; animation: splash-track 1.3s var(--ease-soft) 1.35s forwards; }
+
+@keyframes splash-drop {
+  0% { transform: scaleY(0); transform-origin: top; }
+  55% { transform: scaleY(1); transform-origin: top; }
+  56% { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+@keyframes splash-ripple {
+  0% { opacity: 0; transform: scale(0.08); }
+  18% { opacity: 1; }
+  100% { opacity: 0; transform: scale(1.35); }
+}
+@keyframes splash-char { from { opacity: 0; translate: 0 105%; filter: blur(10px); } to { opacity: 1; translate: 0 0; filter: blur(0); } }
+@keyframes splash-char-italic { from { opacity: 0; translate: 0.15em 105%; rotate: 6deg; filter: blur(10px); } to { opacity: 1; translate: 0 0; rotate: 0deg; filter: blur(0); } }
+@keyframes splash-rule { to { transform: scaleX(1); } }
+@keyframes splash-track { from { opacity: 0; letter-spacing: 0.7em; } to { opacity: 1; letter-spacing: 0.2em; } }
+@keyframes splash-exit { to { opacity: 0; translate: 0 -2.5rem; scale: 0.97; filter: blur(6px); } }
+@keyframes splash-curtain { to { translate: 0 -118%; } }
+@keyframes splash-gone { to { visibility: hidden; } }
+html[data-splash='off'] .splash { display: none; }
+@media (prefers-reduced-motion: reduce) { .splash { display: none; } }
+
+/* Hero intro waits for the splash on first visit only (starts as the curtain rises). */
+:root { --intro: 2.3s; }
+html[data-splash='off'] { --intro: 0.15s; }
+@media (prefers-reduced-motion: no-preference) {
+  .hero-media { animation: hero-settle 2.6s var(--ease-soft) var(--intro) backwards; }
+  .hero-media img, .hero-media video { animation: breathe 28s ease-in-out calc(var(--intro) + 2.6s) infinite alternate; }
+  .scroll-cue-line::after { animation: cue 2.8s var(--ease-silk) infinite; }
+}
+@keyframes hero-settle { from { scale: 1.16; filter: blur(6px); } }
+@keyframes breathe { to { scale: 1.07; } }
+@keyframes cue { 0% { transform: translateY(-100%); } 60%, 100% { transform: translateY(100%); } }
+.scroll-cue-line { position: relative; width: 1px; height: 4.5rem; overflow: clip; background: rgb(240 225 216 / 0.3); }
+.scroll-cue-line::after { content: ''; position: absolute; inset: 0; background: var(--color-porcelain); transform: translateY(-100%); }
+.hero-wash {
+  background:
+    linear-gradient(180deg, rgb(26 20 17 / 0.55) 0%, rgb(26 20 17 / 0) 26%),
+    linear-gradient(20deg, rgb(26 20 17 / 0.78) 0%, rgb(26 20 17 / 0.34) 46%, rgb(26 20 17 / 0.06) 78%);
+}
+
+/* ─── Navigation ────────────────────────────────────────────────────── */
+.site-header {
+  --p: 0;
+  color: color-mix(in oklab, var(--color-ink) calc(var(--p) * 100%), var(--color-porcelain));
+  translate: 0 calc(var(--p) * -2.25rem);
+  transition: translate 0.2s linear;
+}
+.site-header .nav-surface {
+  background: rgb(240 225 216 / calc(var(--p) * 0.82));
+  backdrop-filter: blur(calc(var(--p) * 18px)) saturate(calc(1 + var(--p) * 0.2));
+  -webkit-backdrop-filter: blur(calc(var(--p) * 18px));
+  box-shadow: 0 1px 0 rgb(42 36 33 / calc(var(--p) * 0.08));
+}
+.site-header .ribbon { opacity: calc(1 - var(--p) * 1.4); }
+
+/* Fullscreen mobile menu (native <dialog>: focus trap, Esc, inert page for free). */
+.menu-dialog { width: 100%; max-width: none; height: 100dvh; max-height: none; margin: 0; padding: 0; border: 0; background: var(--color-porcelain); color: var(--color-ink); }
+.menu-dialog::backdrop { background: transparent; }
+@media (prefers-reduced-motion: no-preference) {
+  .menu-dialog[open] { animation: curtain-in 0.9s var(--ease-silk); }
+  .menu-dialog[data-closing] { animation: curtain-out 0.6s var(--ease-silk) forwards; }
+  .menu-dialog[open] .menu-item { animation: menu-rise 0.9s var(--ease-soft) calc(0.25s + var(--i) * 70ms) backwards; }
+}
+@keyframes curtain-in { from { clip-path: inset(0 0 100% 0); } }
+@keyframes curtain-out { to { clip-path: inset(0 0 100% 0); } }
+@keyframes menu-rise { from { opacity: 0; translate: 0 1.5rem; } }
+
+/* ─── Forms (validate after interaction: :user-invalid) ─────────────── */
+.field input, .field textarea {
+  display: block;
+  width: 100%;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--color-stone);
+  border-radius: 0;
+  padding: 0.7rem 0 0.8rem;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  color: var(--color-ink);
+  outline: none;
+  transition: border-color 0.4s var(--ease-soft), background-color 0.4s var(--ease-soft);
+}
+.field textarea { resize: vertical; min-height: 7rem; }
+.field input::placeholder, .field textarea::placeholder { color: rgb(94 86 80 / 0.55); }
+.field-control { position: relative; }
+.field-control::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--color-clay-deep); transform: scaleX(0); transform-origin: left; transition: transform 0.7s var(--ease-silk); pointer-events: none; }
+.field-control:focus-within::after { transform: scaleX(1); }
+.field-error { display: none; color: var(--color-clay-deep); font-size: 0.8125rem; margin-top: 0.5rem; }
+.field input:user-invalid, .field textarea:user-invalid { border-bottom-color: var(--color-clay-deep); background: rgb(181 116 102 / 0.06); }
+.field:has(:user-invalid) .field-error { display: block; }
+.choice input { appearance: none; width: 1rem; height: 1rem; border: 1px solid var(--color-muted); border-radius: 999px; display: grid; place-content: center; margin: 0; }
+.choice input::before { content: ''; width: 0.5rem; height: 0.5rem; border-radius: 999px; background: var(--color-clay-deep); scale: 0; transition: scale 0.3s var(--ease-soft); }
+.choice input:checked::before { scale: 1; }
+.sending-line { height: 1px; background: currentColor; transform-origin: left; animation: sending 1.4s var(--ease-silk) infinite; }
+@keyframes sending { 0% { transform: scaleX(0); } 50% { transform: scaleX(1); transform-origin: left; } 51% { transform-origin: right; } 100% { transform: scaleX(0); transform-origin: right; } }
+
+/* ─── Page transitions (React <ViewTransition> on each page) ────────── */
+::view-transition-old(.page-out) { animation: 0.35s var(--ease-soft) both vt-out; }
+::view-transition-new(.page-in) { animation: 0.8s var(--ease-soft) 0.12s both vt-in; }
+@keyframes vt-out { to { opacity: 0; filter: blur(6px); } }
+@keyframes vt-in { from { opacity: 0; translate: 0 1.5rem; } }
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}
+
+/* ─── 404 ripples ───────────────────────────────────────────────────── */
+.ripple { position: absolute; left: 50%; top: 50%; width: 30vmax; aspect-ratio: 1; border: 1px solid rgb(181 116 102 / 0.5); border-radius: 50%; translate: -50% -50%; opacity: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .ripple { animation: ripple 9s var(--ease-soft) calc(var(--i) * 3s) infinite; }
+}
+@media (prefers-reduced-motion: reduce) { .ripple { opacity: 0.35; scale: calc(0.6 + var(--i) * 0.5); } }
+@keyframes ripple { 0% { scale: 0.2; opacity: 0; } 20% { opacity: 0.8; } 100% { scale: 3; opacity: 0; } }
+
+/* Mobile call bar clears content. */
+@media (max-width: 767px) { body { padding-bottom: 4.5rem; } }
