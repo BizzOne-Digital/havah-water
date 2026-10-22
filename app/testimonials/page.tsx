@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export default function TestimonialsPage() {
   return (
     <PageTransition>
-      <PageHero eyebrow="Testimonials" title={['In their', 'own homes']} image="/images/woman-window-glass.png" alt="Woman holding a glass of water by a window with a Utah mountain view" focus="68% 35%" />
+      <PageHero eyebrow="Testimonials" title={['In their', 'own homes']} image="/images/wellness-water.png" alt="Glass bowl of clear water beside soft linen, rose quartz and a skincare dropper" focus="50% 55%" />
       <section className="py-28 md:py-40">
         <div className="shell">
           <Testimonials limit={5} />
