@@ -7,7 +7,7 @@ import { Cta } from './cta'
 import { HeroVideo } from './hero-video'
 import { Reveal } from './reveal'
 
-const HERO_ALT = 'Woman holding a glass of water in a sunlit Utah residence with mountain views'
+const HERO_ALT = 'Woman holding a glass of water by a window with a Utah mountain view'
 
 /**
  * Full-viewport cinematic hero. Uses MEDIA.heroVideo when supplied (optimized poster from

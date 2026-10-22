@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   title: { default: 'Havahwater | The Eve Water Center™ — Home Water Treatment in Utah', template: '%s | Havahwater' },
   description: DESCRIPTION,
   alternates: { canonical: '/' },
-  openGraph: { type: 'website', siteName: BRAND, locale: 'en_US', images: [{ url: '/images/hero-woman-residence.png', width: 3168, height: 1344 }] },
+  openGraph: { type: 'website', siteName: BRAND, locale: 'en_US', images: [{ url: '/images/woman-window-glass.png' }] },
   twitter: { card: 'summary_large_image' },
 }
 

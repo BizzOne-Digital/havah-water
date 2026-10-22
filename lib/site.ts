@@ -30,9 +30,9 @@ export const isActive = (pathname: string, href: string) => (href === '/' ? path
 export const MEDIA = {
   // e.g. { src: '/media/eve-hero.mp4', type: 'video/mp4' }. Keep it muted-friendly, 10–20s, ~1080p, < 8 MB.
   heroVideo: null as null | { src: string; type: string },
-  heroPoster: '/images/hero-woman-residence.png',
+  heroPoster: '/images/woman-window-glass.png',
   // object-position for the cinematic crop; keeps the subject in frame from phone to ultrawide.
-  heroFocus: '30% 45%',
+  heroFocus: '68% 35%',
   system: '/images/eve-water-center-kitchen.png',
   // Transparent oval crop of /logo/evelogo.png (original kept untouched). Set to null for the typographic wordmark.
   logo: { src: '/logo/eve-logo-oval.png', width: 900, height: 714 } as null | { src: string; width: number; height: number },
